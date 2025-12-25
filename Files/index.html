@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Countdown to New Year!</title>
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #ffcc99, #ff9966);
+    color: #fff;
+    text-align: center;
+  }
+  h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    text-shadow: 0 0 15px rgba(0,0,0,0.3);
+  }
+  #countdown {
+    font-size: 4rem;
+    font-weight: bold;
+    margin-bottom: 30px;
+    text-shadow: 0 0 10px #fff, 0 0 20px #ff6666, 0 0 30px #ff3333, 0 0 40px #ff0000;
+    animation: glow 1.5s infinite alternate;
+  }
+  @keyframes glow {
+    0% { text-shadow: 0 0 5px #fff, 0 0 10px #ff9999, 0 0 15px #ff6666, 0 0 20px #ff3333; }
+    50% { text-shadow: 0 0 10px #fff, 0 0 20px #ff6666, 0 0 30px #ff3333, 0 0 40px #ff0000; }
+    100% { text-shadow: 0 0 15px #fff, 0 0 30px #ff6666, 0 0 45px #ff3333, 0 0 60px #ff0000; }
+  }
+  button {
+    padding: 15px 35px;
+    font-size: 1.5rem;
+    border: none;
+    border-radius: 10px;
+    background: #ff6666;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    transition: 0.3s;
+  }
+  button:hover {
+    background: #cc3333;
+  }
+</style>
+</head>
+<body>
+
+<audio id="bgMusic" loop>
+    <source src="/Musics/romantic.mp3" type="audio/mpeg">
+</audio>
+
+<h1>Countdown to New Year!</h1>
+<div id="countdown">00:00:00</div>
+<button id="goBtn">Go to Surprise!</button>
+
+<script>
+let bgMusic = document.getElementById("bgMusic");
+const countdownEl = document.getElementById('countdown');
+const goBtn = document.getElementById('goBtn');
+
+// Countdown set to 31 December 12:00 AM
+const currentYear = new Date().getFullYear();
+const countdownTime = new Date(currentYear, 11, 31, 0, 0, 0).getTime();
+
+function updateCountdown() {
+    const now = new Date().getTime();
+    const distance = countdownTime - now;
+
+    if(distance <= 0){
+        countdownEl.textContent = "HAPPY NEW YEAR!";
+        countdownEl.style.animation = "sparkle 0.8s infinite alternate";
+        return;
+    }
+
+    const days = Math.floor(distance / (1000*60*60*24));
+    const hours = Math.floor((distance % (1000*60*60*24)) / (1000*60*60));
+    const minutes = Math.floor((distance % (1000*60*60)) / (1000*60));
+    const seconds = Math.floor((distance % (1000*60)) / 1000);
+
+    countdownEl.textContent = `${days}d ${hours.toString().padStart(2,'0')}:${minutes.toString().padStart(2,'0')}:${seconds.toString().padStart(2,'0')}`;
+}
+
+// Glow sparkle for final message
+const style = document.createElement('style');
+style.innerHTML = `
+@keyframes sparkle {
+  0% { text-shadow: 0 0 10px #fff, 0 0 20px #ff6666, 0 0 30px #ff3333; }
+  50% { text-shadow: 0 0 20px #fff, 0 0 40px #ff9999, 0 0 60px #ff6666; }
+  100% { text-shadow: 0 0 30px #fff, 0 0 60px #ffcc99, 0 0 90px #ff9933; }
+}`;
+document.head.appendChild(style);
+
+// Update countdown every second
+setInterval(updateCountdown, 1000);
+
+// Button click to start music and go to main page
+goBtn.addEventListener('click', () => {
+    bgMusic.volume = 0.3;
+    bgMusic.play();
+    sessionStorage.setItem("playMusic", "yes");
+    setTimeout(() => { window.location.href = "main.html"; }, 500);
+});
+</script>
+
+</body>
+</html>

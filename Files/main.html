@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy New Year, Shezadi!</title>
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        background: #fff3e6;
+        font-family: "Arial", sans-serif;
+        overflow: hidden;
+        cursor: default;
+    }
+    .container {
+        position: relative;
+        width: 100%;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 2;
+        text-align: center;
+    }
+    h1 {
+        font-size: 3rem;
+        color: #ff9933;
+        text-shadow: 0 0 15px rgba(255,153,51,0.7);
+        animation: fadeIn 2s ease-in-out, glow 2s infinite alternate;
+        margin: 10px 0;
+    }
+    #love-message {
+        font-size: 1.5rem;
+        color: #cc6600;
+        max-width: 600px;
+        animation: slideUp 2s ease-in-out, glow 2s infinite alternate;
+        margin-bottom: 20px;
+    }
+    .btn {
+        background: #ff9933;
+        color: white;
+        padding: 15px 30px;
+        border: none;
+        font-size: 1.2rem;
+        border-radius: 10px;
+        cursor: pointer;
+        margin-bottom: 20px;
+        animation: bounce 2s infinite, glow 2s infinite alternate;
+    }
+    .btn:hover {
+        background: #cc6600;
+    }
+
+    /* Photo Frames */
+    .photo-frame {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 15px;
+        z-index: 2;
+    }
+    .frame {
+        width: 150px;
+        height: 150px;
+        border: 5px solid #ff9933;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 0 10px rgba(0,0,0,0.3);
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .frame img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s;
+    }
+    .frame:hover { transform: scale(1.1); box-shadow: 0 0 15px rgba(255,153,51,0.7); }
+    .frame:hover img { transform: rotate(5deg); }
+
+    /* Animation Containers */
+    .fireworks-container, .confetti {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top:0; left:0;
+        pointer-events: none;
+        overflow: hidden;
+        z-index: 1;
+    }
+
+    @keyframes fadeIn { from{opacity:0;} to{opacity:1;} }
+    @keyframes slideUp { from{transform:translateY(50px);opacity:0;} to{transform:translateY(0);opacity:1;} }
+    @keyframes bounce { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-10px);} }
+    @keyframes glow { 0% {text-shadow:0 0 10px rgba(255,153,51,0.7);} 100% {text-shadow:0 0 20px rgba(255,153,51,1);} }
+
+    /* Modal */
+    .modal {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: rgba(0,0,0,0.7);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.5s ease;
+        z-index: 5;
+    }
+    .modal.active { opacity:1; visibility: visible; }
+    .modal-content {
+        background: #fff3e6;
+        padding: 30px;
+        border-radius: 15px;
+        max-width: 500px;
+        text-align: center;
+        position: relative;
+        box-shadow: 0 0 20px rgba(255,153,51,0.8);
+    }
+    .modal-content h2 { color: #ff6600; margin-bottom: 15px; animation: glow 2s infinite alternate; }
+    .modal-content p { color:#cc6600; font-size:1.2rem; }
+    .modal-close { position: absolute; top:10px; right:10px; font-size: 1.5rem; cursor: pointer; color: #ff6600; }
+</style>
+</head>
+<body>
+
+<audio id="bgMusic" loop>
+    <source src="/Musics/romantic.mp3" type="audio/mpeg">
+</audio>
+
+<div class="container">
+    <h1>Happy New Year, My Shezadi!</h1>
+    <p id="love-message">Wishing you joy, love, and endless smiles this year! 🎉❤️</p>
+    <button class="btn" onclick="openModal()">Click to Open Your New Year Surprise!</button>
+    <div class="photo-frame">
+        <div class="frame"><img src="/Photos/img1.jpg" alt="Her Picture"></div>
+        <div class="frame"><img src="/Photos/img2.jpg" alt="Her Picture"></div>
+        <div class="frame"><img src="/Photos/img3.jpg" alt="Her Picture"></div>
+    </div>
+</div>
+
+<!-- Background Animations -->
+<div class="fireworks-container"></div>
+<div class="confetti"></div>
+
+<!-- Modal -->
+<div class="modal" id="surpriseModal">
+    <div class="modal-content">
+        <span class="modal-close" onclick="closeModal()">&times;</span>
+        <h2>Happy New Year, Shezadi! 🎉💖</h2>
+        <p>Jan, you are the light of my life, my guriya who makes every moment magical. This year, I wish you endless happiness, laughter, and love. May all your dreams come true, and may I always be by your side to hold your hand through every joy and challenge. 💕 You are my forever, my heart, my everything. I love you more than words can ever express, my sweet shezadi. 🥰✨</p>
+    </div>
+</div>
+
+<script>
+const messages = [
+    "Cheers to a bright new year! 🎉",
+    "You make my year special 💖",
+    "My guriya, my happiness 🥰",
+    "Let’s make unforgettable memories! 🌟",
+    "You are my forever, shezadi 💕",
+];
+const messageElement = document.getElementById("love-message");
+setInterval(() => {
+    const idx = Math.floor(Math.random() * messages.length);
+    messageElement.textContent = messages[idx];
+}, 3000);
+
+// Fireworks
+const fireworksContainer = document.querySelector(".fireworks-container");
+function createFirework() {
+    const numParticles = 15 + Math.floor(Math.random() * 10);
+    const centerX = Math.random() * window.innerWidth;
+    const centerY = (Math.random() * window.innerHeight) / 2;
+    for (let i = 0; i < numParticles; i++) {
+        const particle = document.createElement("div");
+        particle.style.width = "6px";
+        particle.style.height = "6px";
+        particle.style.background = `hsl(${Math.random() * 360},100%,50%)`;
+        particle.style.borderRadius = "50%";
+        particle.style.position = "absolute";
+        particle.style.left = centerX + "px";
+        particle.style.top = centerY + "px";
+        fireworksContainer.appendChild(particle);
+
+        const angle = Math.random() * 2 * Math.PI;
+        const speed = 50 + Math.random() * 50;
+        let x = 0, y = 0, frame = 0;
+        function animate() {
+            x = speed * Math.cos(angle) * (frame / 10);
+            y = speed * Math.sin(angle) * (frame / 10) + 0.5 * frame; // gravity
+            particle.style.transform = `translate(${x}px, ${y}px)`;
+            particle.style.opacity = 1 - frame / 20;
+            frame++;
+            if (frame < 20) requestAnimationFrame(animate);
+            else particle.remove();
+        }
+        animate();
+    }
+}
+setInterval(createFirework, 800);
+
+// Confetti
+const confettiContainer = document.querySelector(".confetti");
+function createConfetti() {
+    const confetti = document.createElement("div");
+    confetti.style.position = "absolute";
+    confetti.style.width = "10px";
+    confetti.style.height = "10px";
+    confetti.style.background = "#ff69b4";
+    confetti.style.clipPath = "polygon(50% 0%,100% 50%,50% 100%,0% 50%)";
+    confetti.style.left = Math.random() * 100 + "vw";
+    confetti.style.top = "-10px";
+    confettiContainer.appendChild(confetti);
+
+    let top = -10;
+    function animate() {
+        top += 5 + Math.random() * 5;
+        confetti.style.top = top + "px";
+        if (top < window.innerHeight) requestAnimationFrame(animate);
+        else confetti.remove();
+    }
+    animate();
+}
+setInterval(createConfetti, 200);
+
+// Modal Functions
+const modal = document.getElementById("surpriseModal");
+function openModal(){ modal.classList.add("active"); }
+function closeModal(){ modal.classList.remove("active"); }
+
+// Background Music
+const bgMusic = document.getElementById("bgMusic");
+window.onload = () => {
+    if(sessionStorage.getItem("playMusic") === "yes"){
+        bgMusic.volume = 0.3;
+        bgMusic.play();
+    }
+};
+</script>
+</body>
+</html>
